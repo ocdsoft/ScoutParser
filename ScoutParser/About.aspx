@@ -2,6 +2,6 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <h2><%: Title %>.</h2>
-    <h3>Reads premium articles on scout.com.</h3>
+    <h3>Sample web scraper.</h3>
     <p>For demo purposes only. Not to be distributed publically.</p>
 </asp:Content>
