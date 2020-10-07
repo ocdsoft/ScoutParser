@@ -30,30 +30,38 @@ namespace WebParser
                     string response = hr.Content.ReadAsStringAsync().Result;
 
                     HtmlDocument document = new HtmlDocument();
-                    document.LoadHtml(response);
-
-                    var article = document.DocumentNode.Descendants("div")
+                    document.LoadHtml(response);                    
+                    
+                    var rivals = document.DocumentNode.Descendants("div")
                         .Where(x => x.Attributes["class"] != null &&
                         x.Attributes["class"].Value == "story-detail premium-story")
                         .SelectMany(x => x.Descendants("p")).SelectMany(p => p.OuterHtml).ToArray();
 
 
-                    if (article != null)
-                        content.InnerHtml = String.Concat(article);
+                    if (rivals != null)                        
+                        content.InnerHtml = String.Concat(rivals);                  
+                   
+                   var oregonlive = document.DocumentNode.Descendants("div")
+                    .Where(x => x.Attributes["class"] != null &&
+                    x.Attributes["class"].Value == "main-wrapper main-wrapper--article")
+                    .SelectMany(x => x.Descendants("p")).SelectMany(p => p.OuterHtml).ToArray();
+
+                    if (oregonlive != null)
+                        content.InnerHtml = String.Concat(oregonlive);
 
                     var metas = document.DocumentNode.Descendants("meta")
-                        .Where(x => x.Attributes["property"] != null ||
-                        x.Attributes["name"] != null);
+                            .Where(x => x.Attributes["property"] != null ||
+                            x.Attributes["name"] != null);
 
-                      title.InnerHtml = metas
-                        .Where(x => x.Attributes["property"] != null && 
-                        x.Attributes["property"].Value == "og:title")
-                        .Select(x => x.Attributes["content"].Value).FirstOrDefault();
+                    title.InnerHtml = metas
+                      .Where(x => x.Attributes["property"] != null &&
+                      x.Attributes["property"].Value == "og:title")
+                      .Select(x => x.Attributes["content"].Value).FirstOrDefault();
 
-                      image.Src = metas
-                        .Where(x => x.Attributes["property"] != null && 
-                        x.Attributes["property"].Value == "og:image")
-                        .Select(x => x.Attributes["content"].Value).FirstOrDefault();
+                    image.Src = metas
+                      .Where(x => x.Attributes["property"] != null &&
+                      x.Attributes["property"].Value == "og:image")
+                      .Select(x => x.Attributes["content"].Value).FirstOrDefault();
 
                     string authorName = metas
                         .Where(x => x.Attributes["property"] != null &&
@@ -68,7 +76,6 @@ namespace WebParser
                     author.InnerHtml = $"Author: {authorName}";
 
                     pubdate.InnerHtml = $"Publish Date: {publishDate}";
-
                 }
             }
         }
