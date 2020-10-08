@@ -240,3 +240,5 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/ScoutParser/Properties/ServiceDependencies/webparser - Web Deploy/profile.arm.json
+/ScoutParser/Properties/PublishProfiles/webparser - Web Deploy.pubxml
