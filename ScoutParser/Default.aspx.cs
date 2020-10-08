@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.UI;
 using System.Net.Http;
 using HtmlAgilityPack;
+using System.Net;
 
 namespace WebParser
 {
@@ -11,7 +12,7 @@ namespace WebParser
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
         protected void btnGo_Click(object sender, EventArgs e)
@@ -48,6 +49,14 @@ namespace WebParser
 
                     if (oregonlive != null)
                         content.InnerHtml = String.Concat(oregonlive);
+
+                    var marinij = document.DocumentNode.Descendants("div")
+                    .Where(x => x.Attributes["class"] != null &&
+                    x.Attributes["class"].Value == "article-content")
+                    .SelectMany(x => x.Descendants("div")).SelectMany(p => p.OuterHtml).ToArray();
+
+                    if (marinij != null)
+                        content.InnerHtml = String.Concat(marinij);
 
                     var metas = document.DocumentNode.Descendants("meta")
                             .Where(x => x.Attributes["property"] != null ||
